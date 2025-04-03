@@ -84,11 +84,14 @@ def get_messages(session_id):
 @jwt_required()
 def get_new_messages(session_id):
     last_message_id = request.args.get('last_message_id', 0, type=int)
-
+    current_user_id = get_jwt_identity()
     # 检查session存在性
     session = Session.query.get(session_id)
     if not session:
         return jsonify({'error': 'Session not found'}), 404
+
+    if session.user_id != current_user_id:
+        return jsonify({'error': 'Unauthorized session'}), 403
 
     # 获取比 last_message_id 新且状态为streaming或completed的消息
     messages = Message.query.filter(
