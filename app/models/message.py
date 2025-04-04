@@ -9,6 +9,7 @@ class MessageStatus(Enum):
     STREAMING = "streaming"
     COMPLETED = "completed"
     ERROR = "error"
+    FAILED = "failed"
 
 # ✅ 消息模型
 class Message(db.Model):
