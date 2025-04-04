@@ -1,7 +1,12 @@
 import time
 import logging
-from jp_server.poller import poll_and_process_messages
-
+from poller import poll_and_process_messages
+import os
+from dotenv import load_dotenv
+from jp_config import Config
+print(" Loaded DB:", Config.SQLALCHEMY_DATABASE_URI)
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(dotenv_path)
 logging.basicConfig(level=logging.INFO)
 
 def main():
@@ -9,12 +14,11 @@ def main():
 
     while True:
         try:
-            # 查询数据库中状态为 PENDING 的消息
             poll_and_process_messages()
         except Exception as e:
             logging.error(f" 主循环出错: {e}")
+        time.sleep(2)
 
-        time.sleep(2)  # 每 2 秒检查一次（可调节）
 
 if __name__ == "__main__":
     main()

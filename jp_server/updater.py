@@ -1,8 +1,8 @@
 # jp_server/updater.py
-from jp_server.db import SessionLocal
+from db import SessionLocal
 from app.models.message import Message
 from app.models.usage import UsageRecord
-from jp_server.constants import MessageStatus
+from constants import MessageStatus
 import logging
 
 
@@ -24,7 +24,7 @@ def mark_completed(message_id):
     try:
         message = db.query(Message).get(message_id)
         if message:
-            message.status = MessageStatus.COMPLETED
+            message.status = MessageStatus.COMPLETED.value
             db.commit()
     except Exception as e:
         logging.error(f"[Updater] 标记 COMPLETED 失败: {e}")
@@ -37,7 +37,7 @@ def mark_failed(message_id, error_msg=""):
     try:
         message = db.query(Message).get(message_id)
         if message:
-            message.status = MessageStatus.FAILED
+            message.status = MessageStatus.FAILED.value
             message.error_message = error_msg[:500]
             db.commit()
     except Exception as e:
@@ -70,7 +70,7 @@ def mark_streaming(message_id):
     try:
         message = db.query(Message).get(message_id)
         if message:
-            message.status = MessageStatus.STREAMING
+            message.status = MessageStatus.STREAMING.value
             db.commit()
     except Exception as e:
         logging.error(f"[Updater] 标记 STREAMING 失败: {e}")
