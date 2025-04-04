@@ -1,14 +1,21 @@
-# 忽略所有 Python 虚拟环境
+# Python virtual environment
 venv/
 **/venv/
 
-# 忽略环境变量配置文件
+# Env config
 .env
 **/.env
 
-# 忽略 pyc 缓存文件
+# PyCharm config
+.idea/
+*.iml
+
+# Cache and bytecode
 __pycache__/
 *.pyc
 
-# 忽略日志文件
+# SSH/敏感配置
+sshConfigs.xml
+
+# Logs
 *.log
