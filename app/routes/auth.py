@@ -32,7 +32,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         logging.info(f'User registered successfully: {username}')
-        return jsonify({'message': 'User registered successfully', 'user_id': new_user.id}), 201
+        return jsonify({'message': 'User registered successfully', 'user_id': new_user.user_id}), 201
     except Exception as e:
         db.session.rollback()
         logging.error(f'Error registering user: {str(e)}')
@@ -60,12 +60,12 @@ def login():
         return jsonify({'error': 'Invalid username or password'}), 401
 
     # 创建JWT令牌 (有效期7天)
-    access_token = create_access_token(identity=user.id, expires_delta=timedelta(days=7))
+    access_token = create_access_token(identity=user.user_id, expires_delta=timedelta(days=7))
 
     logging.info(f'User logged in successfully: {username}')
 
     return jsonify({
         'message': 'Login successful',
         'access_token': access_token,
-        'user_id': user.id
+        'user_id': user.user_id
     }), 200

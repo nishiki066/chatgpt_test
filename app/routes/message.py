@@ -108,3 +108,41 @@ def get_new_messages(session_id):
     } for m in messages]
 
     return jsonify({'messages': message_list}), 200
+
+# PATCH /messages/<id>/status
+@message_bp.route('/<int:message_id>/status', methods=['PATCH'])
+@jwt_required()
+def update_message_status(message_id):
+    current_user_id = get_jwt_identity()
+    data = request.get_json()
+
+    status = data.get('status')
+    content = data.get('content')
+    error_message = data.get('error_message')
+    tokens_used = data.get('tokens_used')
+
+    message = Message.query.get(message_id)
+
+    if not message:
+        return jsonify({'error': 'Message not found'}), 404
+
+    # 确保是自己的消息
+    if message.user_id != current_user_id:
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    try:
+        if status:
+            message.status = status
+        if content:
+            message.content = (message.content or '') + content  # 如果是追加，可以改为 +=
+        if error_message:
+            message.error_message = error_message
+        if tokens_used is not None:
+            message.tokens_used = tokens_used
+
+        db.session.commit()
+
+        return jsonify({'message': 'Status updated successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to update status', 'details': str(e)}), 500
