@@ -32,6 +32,8 @@ def create_app():
 
     from app.routes.session import session_bp
     app.register_blueprint(session_bp, url_prefix='/session')
-
+    @app.route('/ping', methods=['GET'])
+    def ping():
+        return jsonify({'status': 'ok', 'message': 'Server is running'}), 200
 
     return app
