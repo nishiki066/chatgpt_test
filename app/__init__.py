@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
@@ -20,8 +20,6 @@ def create_app():
     jwt = JWTManager()
     jwt.init_app(app)
 
-
-
     # 启用跨域支持
     CORS(app, origins=app.config['CORS_ORIGINS'], supports_credentials=app.config['CORS_SUPPORTS_CREDENTIALS'])
 
@@ -34,5 +32,6 @@ def create_app():
 
     from app.routes.session import session_bp
     app.register_blueprint(session_bp, url_prefix='/session')
+
 
     return app
